@@ -12,3 +12,96 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  password  String
+  createdAt DateTime  @default(now())
+  lastLogin DateTime?
+  fullName  String
+  role      Role
+  employers Employer[]
+  workers   Worker[]
+}
+
+enum Role {
+  EMPLOYER
+  WORKER
+}
+
+model Employer {
+  id          String  @id @default(cuid())
+  userId      String  @unique
+  profile     String?
+  name        String?
+  description String?
+  type        String?
+  bio         String?
+  activity    String?
+  address     String?
+  telephone   String?
+  user        User    @relation(fields: [userId], references: [id])
+  jobs        Job[]
+}
+
+model Worker {
+  id          String      @id @default(cuid())
+  userId      String      @unique
+  firstName   String?
+  lastName    String?
+  bio         String?
+  cvFile      String?
+  activity    String?
+  address     String?
+  telephone   String?
+  user        User        @relation(fields: [userId], references: [id])
+  experiences WorkerExperience[]
+  applications Application[]
+}
+
+model Job {
+  id           String     @id @default(cuid())
+  title        String
+  description  String?
+  bio          String?
+  localisation String?
+  status       String?
+  salary       String?
+  jobType      JobType?
+  posterId     String
+  employer     Employer @relation(fields: [posterId], references: [id])
+  applications Application[]
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  TEMPORARY
+  INTERN
+}
+
+model WorkerExperience {
+  id          String    @id @default(cuid())
+  workerId    String
+  title       String
+  description String?
+  percentage  Int
+  worker      Worker @relation(fields: [workerId], references: [id])
+}
+
+model Application {
+  id        String     @id @default(cuid())
+  jobId     String
+  workerId  String
+  status    String
+  date      DateTime @default(now())
+  link      String?
+  cv        String?
+  motivation String?
+  job       Job     @relation(fields: [jobId], references: [id])
+  worker    Worker  @relation(fields: [workerId], references: [id])
+}
+
+

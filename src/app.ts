@@ -1,6 +1,6 @@
-import express, { Application, Request, Response, NextFunction } from 'express';
+import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
-// import userRoutes from './routes/userRoutes';
+import authRoutes from './auth/auth.routes';
 
 const app: Application = express();
 
@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-// app.use('/api/users', userRoutes)
+app.use('/api/auth', authRoutes);
 
 //Test
 app.get('/', (req: Request, res: Response) => {
