@@ -2,7 +2,6 @@
     "name": "asher-backend",
     "version": "1.0.0",
     "description": "Backend For the Asher Application",
-    "type": "module",
     "main": "src/index.ts",
     "scripts": {
         "build": "tsc",
