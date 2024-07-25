@@ -1,15 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import { Response, NextFunction } from 'express';
 import { Role } from '../config/prisma';
-import config from '../config/config';
-
-interface AuthenticatedRequest extends Request {
-    user?: {
-        userId: string;
-        email: string;
-        role: Role;
-    };
-}
+import { AuthenticatedRequest } from '../interfaces/request';
 
 const authorize = (role: Role) => {
     return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {

@@ -30,13 +30,18 @@ enum Role {
   WORKER
 }
 
+enum EmpType {
+  PERSON
+  ORGANISATION
+}
+
 model Employer {
   id          String  @id @default(cuid())
   userId      String  @unique
   profile     String?
   name        String?
   description String?
-  type        String?
+  type        EmpType?
   bio         String?
   activity    String?
   address     String?
@@ -51,6 +56,7 @@ model Worker {
   firstName   String?
   lastName    String?
   bio         String?
+  title       String?
   cvFile      String?
   activity    String?
   address     String?
