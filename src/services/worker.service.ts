@@ -5,6 +5,7 @@ const workerTable = prisma.worker;
 interface requestBody {
     firstName?: string;
     lastName?: string;
+    profile?: string;
     bio?: string;
     title?: string;
     cvFile?: string;

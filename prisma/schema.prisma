@@ -53,6 +53,7 @@ model Employer {
 model Worker {
   id          String      @id @default(cuid())
   userId      String      @unique
+  profile     String?
   firstName   String?
   lastName    String?
   bio         String?
