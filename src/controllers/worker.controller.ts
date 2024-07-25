@@ -25,7 +25,7 @@ const getWorkerProfile = async (req: Request, res: Response) => {
             message: 'Error fetching Worker profile',
             statusCode: 500,
         };
-        res.status(responseError.statusCode).json(responseError);
+        return res.status(responseError.statusCode).json(responseError);
     }
 };
 
@@ -48,7 +48,7 @@ const getYourWorkerProfile = async (req: AuthenticatedRequest, res: Response) =>
                 });
             }
         }
-        res.status(401).json({
+        return res.status(401).json({
             status: 'Unauthorized',
             message: "You don't have access",
             statusCode: 401,
@@ -59,7 +59,7 @@ const getYourWorkerProfile = async (req: AuthenticatedRequest, res: Response) =>
             message: 'Error fetching worker profile',
             statusCode: 500,
         };
-        res.status(responseError.statusCode).json(responseError);
+        return res.status(responseError.statusCode).json(responseError);
     }
 };
 
@@ -89,7 +89,7 @@ const setWorkerProfile = async (req: AuthenticatedRequest, res: Response) => {
             message: 'Error fetching worker profile',
             statusCode: 500,
         };
-        res.status(responseError.statusCode).json(responseError);
+        return res.status(responseError.statusCode).json(responseError);
     }
 };
 

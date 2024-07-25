@@ -26,7 +26,7 @@ const getEmployerProfile = async (req: Request, res: Response) => {
             message: 'Error fetching employer profile',
             statusCode: 500,
         };
-        res.status(responseError.statusCode).json(responseError);
+        return res.status(responseError.statusCode).json(responseError);
     }
 };
 
@@ -49,7 +49,7 @@ const getYourEmployerProfile = async (req: AuthenticatedRequest, res: Response) 
                 });
             }
         }
-        res.status(401).json({
+        return res.status(401).json({
             status: 'Unauthorized',
             message: "You don't have access",
             statusCode: 401,
@@ -60,7 +60,7 @@ const getYourEmployerProfile = async (req: AuthenticatedRequest, res: Response) 
             message: 'Error fetching employer profile',
             statusCode: 500,
         };
-        res.status(responseError.statusCode).json(responseError);
+        return res.status(responseError.statusCode).json(responseError);
     }
 };
 
@@ -91,7 +91,7 @@ const setEmployerProfile = async (req: AuthenticatedRequest, res: Response) => {
             message: 'Error fetching employer profile',
             statusCode: 500,
         };
-        res.status(responseError.statusCode).json(responseError);
+        return res.status(responseError.statusCode).json(responseError);
     }
 };
 

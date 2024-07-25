@@ -33,14 +33,14 @@ async function register(req: UserRequest, res: Response) {
                 user: user,
             },
         };
-        res.status(201).json(response);
+        return res.status(201).json(response);
     } catch (error) {
         const responseError = {
             status: 'Bad request',
             message: 'Registration unsuccessful',
             statusCode: 400,
         };
-        res.status(responseError.statusCode).json(responseError);
+        return res.status(responseError.statusCode).json(responseError);
     }
 }
 
@@ -62,7 +62,7 @@ async function login(req: Request, res: Response) {
                     user: user,
                 },
             };
-            res.status(200).json(response);
+            return res.status(200).json(response);
         } else {
             throw new Error('Bad Credential');
         }
@@ -72,7 +72,7 @@ async function login(req: Request, res: Response) {
             message: 'Authentication failed',
             statusCode: 401,
         };
-        res.status(responseError.statusCode).json(responseError);
+        return res.status(responseError.statusCode).json(responseError);
     }
 }
 
@@ -87,12 +87,12 @@ async function userProfile(req: AuthenticatedRequest, res: Response) {
                     message: 'User found',
                     data: user,
                 };
-                res.status(200).json(response);
+                return res.status(200).json(response);
             } else {
-                res.status(404).json({ message: "This user doesn't exist" });
+                return res.status(404).json({ message: "This user doesn't exist" });
             }
         }
-        res.status(401).json({
+        return res.status(401).json({
             status: 'Unauthorized',
             message: "You don't have access",
             statusCode: 401,
@@ -103,7 +103,7 @@ async function userProfile(req: AuthenticatedRequest, res: Response) {
             message: 'Errer Getting Your User Profile',
             statusCode: 500,
         };
-        res.status(responseError.statusCode).json(responseError);
+        return res.status(responseError.statusCode).json(responseError);
     }
 }
 
