@@ -1,5 +1,5 @@
-import prisma, { User } from '../config/prisma';
-
+import prisma, { User, Role, EmpType } from '../config/prisma';
+import { requestBodyEmployer } from '../interfaces/interfaces';
 interface ValidationError {
     field: string;
     message: string;
@@ -8,6 +8,7 @@ interface ValidationError {
 interface UserInput {
     email: string;
     fullName: string;
+    role: Role;
     password: string;
 }
 
@@ -30,6 +31,8 @@ const validateUser = async (user: UserInput): Promise<ValidationError[]> => {
     const errors: ValidationError[] = [];
     if (!user.email) errors.push({ field: 'email', message: 'Email is required' });
     if (!user.fullName) errors.push({ field: 'fullName', message: 'Full name is required' });
+    if (![Role.EMPLOYER, Role.WORKER].includes(user.role)) errors.push({ field: 'role', message: 'Unknown Type' });
+    if (!user.role) errors.push({ field: 'role', message: 'User Type is required' });
     if (exists) errors.push({ field: 'email', message: 'Email already exists' });
     return errors;
 };
@@ -41,4 +44,10 @@ const validateLogin = (user: Partial<UserInput>): ValidationError[] => {
     return errors;
 };
 
-export { validateUser, validateLogin };
+const validateEmployerSetting = (employer: Partial<requestBodyEmployer>): ValidationError[] => {
+    const errors: ValidationError[] = [];
+    if (employer.type && ![EmpType.ORGANISATION, EmpType.PERSON].includes(employer.type)) errors.push({ field: 'role', message: 'Unknown Type' });
+    return errors;
+};
+
+export { validateUser, validateLogin, validateEmployerSetting };

@@ -1,17 +1,7 @@
 import prisma, { EmpType } from '../config/prisma';
+import { requestBodyEmployer } from '../interfaces/interfaces';
 
 const employerTable = prisma.employer;
-
-interface requestBody {
-    profile?: string;
-    name?: string;
-    description?: string;
-    type?: EmpType;
-    bio?: string;
-    activity?: string;
-    address?: string;
-    telephone?: string;
-}
 
 const getEmployer = async (empId: string) => {
     try {
@@ -20,16 +10,26 @@ const getEmployer = async (empId: string) => {
                 id: empId,
             },
         });
-        if (!employer) {
-            throw new Error(`Employer not found`);
-        }
         return employer;
     } catch {
-        throw new Error(`Error fetching user`);
+        throw new Error(`Error fetching Employer`);
     }
 };
 
-const createUpdateEmployerProfile = async (userId: string, body: requestBody) => {
+const getAuthEmployer = async (userId: string) => {
+    try {
+        const employer = await employerTable.findUnique({
+            where: {
+                userId: userId,
+            },
+        });
+        return employer;
+    } catch {
+        throw new Error(`Error fetching Your Profile`);
+    }
+};
+
+const createUpdateEmployerProfile = async (userId: string, body: requestBodyEmployer) => {
     try {
         const hasProfile = await employerTable.findUnique({
             where: {
@@ -68,4 +68,4 @@ const deleteEmployerProfile = async (userId: string) => {
     }
 };
 
-export { getEmployer, createUpdateEmployerProfile, deleteEmployerProfile };
+export { getEmployer, getAuthEmployer, createUpdateEmployerProfile, deleteEmployerProfile };

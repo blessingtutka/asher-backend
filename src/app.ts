@@ -15,9 +15,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/employer', employerRoutes);
 app.use('/api/worker', workerRoutes);
 
-//Test
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello This Is The Asher Backend App with endpoint');
+//Not Found Routes
+app.use((req, res, next) => {
+    res.status(404).json({ message: 'Route not found' });
 });
-
 export default app;

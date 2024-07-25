@@ -1,18 +1,7 @@
-import prisma, { EmpType } from '../config/prisma';
+import prisma from '../config/prisma';
+import { requestBodyWorker } from '../interfaces/interfaces';
 
 const workerTable = prisma.worker;
-
-interface requestBody {
-    firstName?: string;
-    lastName?: string;
-    profile?: string;
-    bio?: string;
-    title?: string;
-    cvFile?: string;
-    activity?: string;
-    address?: string;
-    telephone?: string;
-}
 
 const getWorker = async (workerId: string) => {
     try {
@@ -21,16 +10,26 @@ const getWorker = async (workerId: string) => {
                 id: workerId,
             },
         });
-        if (!worker) {
-            throw new Error(`Worker not found`);
-        }
         return worker;
     } catch {
         throw new Error(`Error fetching user`);
     }
 };
 
-const createUpdateWorkerProfile = async (userId: string, body: requestBody) => {
+const getAuthWorker = async (userId: string) => {
+    try {
+        const worker = await workerTable.findUnique({
+            where: {
+                userId: userId,
+            },
+        });
+        return worker;
+    } catch {
+        throw new Error(`Error fetching Your Profile`);
+    }
+};
+
+const createUpdateWorkerProfile = async (userId: string, body: requestBodyWorker) => {
     try {
         const hasProfile = await workerTable.findUnique({
             where: {
@@ -69,4 +68,4 @@ const deleteWorkerProfile = async (userId: string) => {
     }
 };
 
-export { getWorker, createUpdateWorkerProfile, deleteWorkerProfile };
+export { getWorker, getAuthWorker, createUpdateWorkerProfile, deleteWorkerProfile };

@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { Role } from '../config/prisma';
-import { AuthenticatedRequest } from '../interfaces/request';
+import { AuthenticatedRequest } from '../interfaces/interfaces';
 
 const authorize = (role: Role) => {
     return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {

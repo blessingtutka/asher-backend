@@ -1,5 +1,5 @@
-import { PrismaClient, Role } from '@prisma/client';
-import type { User, EmpType, Employer, Worker, WorkerExperience, Job, JobType, Application } from '@prisma/client';
+import { PrismaClient, Role, EmpType } from '@prisma/client';
+import type { User, Employer, Worker, WorkerExperience, Job, JobType, Application } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
