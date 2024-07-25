@@ -13,6 +13,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  EMPLOYER
+  WORKER
+}
+
+enum EmpType {
+  PERSON
+  ORGANISATION
+}
+
 model User {
   id        String    @id @default(cuid())
   email     String    @unique
@@ -23,16 +33,6 @@ model User {
   role      Role
   employers Employer[]
   workers   Worker[]
-}
-
-enum Role {
-  EMPLOYER
-  WORKER
-}
-
-enum EmpType {
-  PERSON
-  ORGANISATION
 }
 
 model Employer {
