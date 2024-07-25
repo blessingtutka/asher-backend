@@ -3,6 +3,7 @@ import { Role as UserRole } from '../config/prisma';
 import { createUser, verifyUser, getSingleUser } from './auth.service';
 import { validateLogin, validateUser } from '../utils/validations';
 import { generateToken } from '../utils/generateToken';
+import { AuthenticatedRequest } from '../interfaces/interfaces';
 
 interface UserRequest extends Request {
     body: {
@@ -75,24 +76,31 @@ async function login(req: Request, res: Response) {
     }
 }
 
-async function userProfile(req: UserRequest, res: Response) {
-    const { userId } = req.params;
+async function userProfile(req: AuthenticatedRequest, res: Response) {
+    const currentUser = req.user;
     try {
-        const user = await getSingleUser(userId);
-        if (user) {
-            const response = {
-                status: 'success',
-                message: 'User found',
-                data: user,
-            };
-            res.status(200).json(response);
-        } else {
-            res.status(404).json({ message: "This user doesn't exist" });
+        if (currentUser) {
+            const user = await getSingleUser(currentUser?.userId);
+            if (user) {
+                const response = {
+                    status: 'success',
+                    message: 'User found',
+                    data: user,
+                };
+                res.status(200).json(response);
+            } else {
+                res.status(404).json({ message: "This user doesn't exist" });
+            }
         }
+        res.status(401).json({
+            status: 'Unauthorized',
+            message: "You don't have access",
+            statusCode: 401,
+        });
     } catch (error: any) {
         const responseError = {
             status: 'error',
-            message: error.message,
+            message: 'Errer Getting Your User Profile',
             statusCode: 500,
         };
         res.status(responseError.statusCode).json(responseError);
