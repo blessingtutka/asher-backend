@@ -3,7 +3,7 @@ import cors from 'cors';
 import authRoutes from './auth/auth.routes';
 import employerRoutes from './routes/employer.routes';
 import workerRoutes from './routes/worker.routes';
-
+import jobRoutes from './routes/job.routes';
 const app: Application = express();
 
 // Middleware
@@ -14,6 +14,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/employer', employerRoutes);
 app.use('/api/worker', workerRoutes);
+app.use('api/job', jobRoutes);
 
 //Not Found Routes
 app.use((req, res, next) => {

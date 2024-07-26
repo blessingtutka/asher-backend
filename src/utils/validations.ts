@@ -1,5 +1,5 @@
-import prisma, { User, Role, EmpType } from '../config/prisma';
-import { requestBodyEmployer } from '../interfaces/interfaces';
+import prisma, { User, Role, EmpType, JobType, JobStatus } from '../config/prisma';
+import { requestBodyEmployer, requestBodyJob } from '../interfaces/interfaces';
 interface ValidationError {
     field: string;
     message: string;
@@ -50,4 +50,16 @@ const validateEmployerSetting = (employer: Partial<requestBodyEmployer>): Valida
     return errors;
 };
 
-export { validateUser, validateLogin, validateEmployerSetting };
+const JOB_TYPES: JobType[] = [JobType.CONTRACT, JobType.FULL_TIME, JobType.INTERN, JobType.PART_TIME, JobType.TEMPORARY];
+const JOB_STATUS: JobStatus[] = [JobStatus.OPEN, JobStatus.CLOSE];
+
+const validateJob = (job: Partial<requestBodyJob>): ValidationError[] => {
+    const errors: ValidationError[] = [];
+    if (!job.title) errors.push({ field: 'title', message: 'Job Title is required' });
+    if (!job.posterId) errors.push({ field: 'posterId', message: 'Poster is required' });
+    if (job.jobType && !JOB_TYPES.includes(job.jobType)) errors.push({ field: 'job_type', message: 'Unknown Type' });
+    if (job.status && !JOB_STATUS.includes(job.status)) errors.push({ field: 'status', message: 'Unknown Status' });
+    return errors;
+};
+
+export { validateUser, validateLogin, validateEmployerSetting, validateJob };

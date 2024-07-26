@@ -23,6 +23,19 @@ enum EmpType {
   ORGANISATION
 }
 
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  TEMPORARY
+  INTERN
+}
+
+enum JobStatus {
+  OPEN
+  CLOSE
+}
+
 model User {
   id        String    @id @default(cuid())
   email     String    @unique
@@ -69,24 +82,15 @@ model Worker {
 
 model Job {
   id           String     @id @default(cuid())
+  posterId     String
   title        String
   description  String?
-  bio          String?
   localisation String?
-  status       String?
   salary       String?
   jobType      JobType?
-  posterId     String
+  status       JobStatus @default(OPEN)
   employer     Employer @relation(fields: [posterId], references: [id])
   applications Application[]
-}
-
-enum JobType {
-  FULL_TIME
-  PART_TIME
-  CONTRACT
-  TEMPORARY
-  INTERN
 }
 
 model WorkerExperience {
