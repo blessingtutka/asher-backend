@@ -9,52 +9,91 @@ const getJob = async (req: Request, res: Response) => {
         const { id } = req.params;
         const job = await jobService.getJob(id);
         if (job) {
-            return res.status(200).json({
-                status: 'Success',
+            const response = {
+                status: 'success',
                 message: 'Job retrieved successfully',
                 data: job,
-            });
+                status_code: 200,
+            };
+            return res.status(response.status_code).json(response);
         } else {
             return res.status(404).json({
-                status: 'Not Found',
-                message: 'Job not found',
+                status: 'error',
+                error: {
+                    code: 'Not Found',
+                    message: 'Job not found',
+                },
+                status_code: 404,
             });
         }
     } catch (error) {
-        return res.status(500).json({
-            status: 'Error',
-            message: 'Error fetching job',
-        });
+        const responseError = {
+            status: 'error',
+            error: {
+                code: 'Internal Server Error',
+                message: 'Error fetching job',
+            },
+            status_code: 500,
+        };
+        return res.status(responseError.status_code).json(responseError);
     }
 };
 
 const getAllJobs = async (req: Request, res: Response) => {
     try {
         const jobs = await jobService.getAllJobs();
-        return res.status(200).json({
-            status: 'Success',
+        const response = {
+            status: 'success',
             message: 'Jobs retrieved successfully',
             data: jobs,
-        });
+            status_code: 200,
+        };
+        return res.status(response.status_code).json(response);
     } catch (error) {
-        return res.status(500).json({
-            status: 'Error',
-            message: 'Error fetching jobs',
-        });
+        const responseError = {
+            status: 'error',
+            error: {
+                code: 'Internal Server Error',
+                message: 'Error fetching jobs',
+            },
+            status_code: 500,
+        };
+        return res.status(responseError.status_code).json(responseError);
     }
 };
 
 const getAuthEmployerJobs = async (req: AuthenticatedRequest, res: Response) => {
+    const user = req.user;
+    if (!user) {
+        return res.status(401).json({
+            status: 'error',
+            error: {
+                code: 'Unauthorized',
+                message: "You don't have access",
+            },
+            status_code: 401,
+        });
+    }
+
     try {
-        const user = req.user;
-        if (user) {
-            const jobs = await jobService.getAuthEmployerJobs(user.userId);
-            res.json(jobs);
-        } else {
-            res.status(401).json({ error: 'Unauthorized' });
-        }
+        const jobs = await jobService.getAuthEmployerJobs(user.userId);
+        const response = {
+            status: 'Success',
+            message: 'Jobs retrieved successfully',
+            data: jobs,
+            status_code: 200,
+        };
+        return res.status(response.status_code).json(response);
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching jobs for authenticated employer' });
+        const responseError = {
+            status: 'error',
+            error: {
+                code: 'Internal Server Error',
+                message: 'Error fetching jobs',
+            },
+            status_code: 500,
+        };
+        return res.status(responseError.status_code).json(responseError);
     }
 };
 
@@ -63,8 +102,12 @@ const createJob = async (req: AuthenticatedRequest, res: Response) => {
 
     if (!user) {
         return res.status(401).json({
-            status: 'Unauthorized',
-            message: "You don't have access",
+            status: 'error',
+            error: {
+                code: 'Unauthorized',
+                message: "You don't have access",
+            },
+            status_code: 401,
         });
     }
 
@@ -74,18 +117,26 @@ const createJob = async (req: AuthenticatedRequest, res: Response) => {
     try {
         const employer = await getAuthEmployer(user.userId);
         const data = { ...req.body, posterId: employer?.id };
-
         const job = await jobService.createJob(data);
-        return res.status(201).json({
-            status: 'Success',
+
+        const response = {
+            status: 'success',
             message: 'Job created successfully',
             data: job,
-        });
+            status_code: 201,
+        };
+
+        return res.status(response.status_code).json(response);
     } catch (error) {
-        return res.status(500).json({
-            status: 'Error',
-            message: 'Error creating job',
-        });
+        const responseError = {
+            status: 'error',
+            error: {
+                code: 'Bad Request',
+                message: 'Error creating job',
+            },
+            status_code: 400,
+        };
+        return res.status(responseError.status_code).json(responseError);
     }
 };
 
@@ -97,8 +148,12 @@ const updateJob = async (req: AuthenticatedRequest, res: Response) => {
 
     if (!user) {
         return res.status(401).json({
-            status: 'Unauthorized',
-            message: "You don't have access",
+            status: 'error',
+            error: {
+                code: 'Unauthorized',
+                message: "You don't have access",
+            },
+            status_code: 401,
         });
     }
 
@@ -107,20 +162,34 @@ const updateJob = async (req: AuthenticatedRequest, res: Response) => {
         const job = await jobService.getJob(id);
 
         if (job?.employer.userId !== user.userId) {
-            return res.status(403).json({ error: 'Forbidden', message: 'Operation Denied' });
+            return res.status(403).json({
+                status: 'error',
+                error: {
+                    code: 'Forbidden',
+                    message: 'Operation Denied',
+                },
+                status_code: 403,
+            });
         }
 
         const updatedJob = await jobService.updateJob(id, req.body);
-        return res.status(200).json({
-            status: 'Success',
+        const response = {
+            status: 'success',
             message: 'Job updated successfully',
             data: updatedJob,
-        });
+            status_code: 201,
+        };
+        return res.status(response.status_code).json(response);
     } catch (error) {
-        return res.status(500).json({
-            status: 'Error',
-            message: 'Error updating job',
-        });
+        const responseError = {
+            status: 'error',
+            error: {
+                code: 'Bad Request',
+                message: 'Error updating Job',
+            },
+            status_code: 400,
+        };
+        return res.status(responseError.status_code).json(responseError);
     }
 };
 
@@ -129,8 +198,12 @@ const deleteJob = async (req: AuthenticatedRequest, res: Response) => {
 
     if (!user) {
         return res.status(401).json({
-            status: 'Unauthorized',
-            message: "You don't have access",
+            status: 'error',
+            error: {
+                code: 'Unauthorized',
+                message: "You don't have access",
+            },
+            status_code: 401,
         });
     }
 
@@ -139,19 +212,34 @@ const deleteJob = async (req: AuthenticatedRequest, res: Response) => {
         const job = await jobService.getJob(id);
 
         if (job?.employer.userId !== user.userId) {
-            return res.status(403).json({ error: 'Forbidden', message: 'Operation Denied' });
+            return res.status(403).json({
+                status: 'error',
+                error: {
+                    code: 'Forbidden',
+                    message: 'Operation Denied',
+                },
+                status_code: 403,
+            });
         }
 
         await jobService.deleteJob(id);
-        return res.status(200).json({
-            status: 'Success',
+        const response = {
+            status: 'success',
             message: 'Job deleted successfully',
-        });
+            data: job,
+            status_code: 201,
+        };
+        return res.status(response.status_code).json(response);
     } catch (error) {
-        return res.status(500).json({
-            status: 'Error',
-            message: 'Error deleting job',
-        });
+        const responseError = {
+            status: 'error',
+            error: {
+                code: 'Bad Request',
+                message: 'Error deleting Job',
+            },
+            status_code: 400,
+        };
+        return res.status(responseError.status_code).json(responseError);
     }
 };
 

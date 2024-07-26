@@ -56,7 +56,6 @@ const JOB_STATUS: JobStatus[] = [JobStatus.OPEN, JobStatus.CLOSE];
 const validateJob = (job: Partial<requestBodyJob>): ValidationError[] => {
     const errors: ValidationError[] = [];
     if (!job.title) errors.push({ field: 'title', message: 'Job Title is required' });
-    if (!job.posterId) errors.push({ field: 'posterId', message: 'Poster is required' });
     if (job.jobType && !JOB_TYPES.includes(job.jobType)) errors.push({ field: 'job_type', message: 'Unknown Type' });
     if (job.status && !JOB_STATUS.includes(job.status)) errors.push({ field: 'status', message: 'Unknown Status' });
     return errors;

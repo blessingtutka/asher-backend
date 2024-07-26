@@ -36,11 +36,15 @@ async function register(req: UserRequest, res: Response) {
         return res.status(201).json(response);
     } catch (error) {
         const responseError = {
-            status: 'Bad request',
-            message: 'Registration unsuccessful',
-            statusCode: 400,
+            status: 'error',
+            error: {
+                code: 'Bad Request',
+                message: 'Registration unsuccessful',
+            },
+
+            status_code: 400,
         };
-        return res.status(responseError.statusCode).json(responseError);
+        return res.status(responseError.status_code).json(responseError);
     }
 }
 
@@ -68,42 +72,57 @@ async function login(req: Request, res: Response) {
         }
     } catch (error) {
         const responseError = {
-            status: 'Bad request',
-            message: 'Authentication failed',
-            statusCode: 401,
+            status: 'error',
+            error: {
+                code: 'Bad Request',
+                message: 'Authentication failed',
+            },
+            status_code: 400,
         };
-        return res.status(responseError.statusCode).json(responseError);
+        return res.status(responseError.status_code).json(responseError);
     }
 }
 
 async function userProfile(req: AuthenticatedRequest, res: Response) {
     const currentUser = req.user;
-    try {
-        if (currentUser) {
-            const user = await getSingleUser(currentUser?.userId);
-            if (user) {
-                const response = {
-                    status: 'success',
-                    message: 'User found',
-                    data: user,
-                };
-                return res.status(200).json(response);
-            } else {
-                return res.status(404).json({ message: "This user doesn't exist" });
-            }
-        }
+
+    if (!currentUser) {
         return res.status(401).json({
-            status: 'Unauthorized',
-            message: "You don't have access",
-            statusCode: 401,
+            status: 'error',
+            error: {
+                code: 'Unauthorized',
+                message: "You don't have access",
+            },
+            status_code: 401,
         });
+    }
+
+    try {
+        const user = await getSingleUser(currentUser?.userId);
+        if (user) {
+            const response = {
+                status: 'success',
+                message: 'User found',
+                data: user,
+            };
+            return res.status(200).json(response);
+        } else {
+            return res.status(404).json({
+                status: 'error',
+                error: { code: 'Not Found', message: "This user doesn't exist" },
+                status_code: 404,
+            });
+        }
     } catch (error: any) {
         const responseError = {
             status: 'error',
-            message: 'Errer Getting Your User Profile',
-            statusCode: 500,
+            error: {
+                code: 'Internal Server Error',
+                message: 'Errer Getting Your User Profile',
+            },
+            status_code: 500,
         };
-        return res.status(responseError.statusCode).json(responseError);
+        return res.status(responseError.status_code).json(responseError);
     }
 }
 
