@@ -36,6 +36,12 @@ enum JobStatus {
   CLOSE
 }
 
+enum ApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
 model User {
   id        String    @id @default(cuid())
   email     String    @unique
@@ -106,7 +112,7 @@ model Application {
   id        String     @id @default(cuid())
   jobId     String
   workerId  String
-  status    String
+  status    ApplicationStatus @default(PENDING)
   date      DateTime @default(now())
   link      String?
   cv        String?

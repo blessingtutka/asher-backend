@@ -1,5 +1,5 @@
-import prisma, { User, Role, EmpType, JobType, JobStatus } from '../config/prisma';
-import { requestBodyEmployer, requestBodyJob } from '../interfaces/interfaces';
+import prisma, { User, Role, EmpType, JobType, JobStatus, ApplicationStatus } from '../config/prisma';
+import { requestBodyEmployer, requestBodyJob, requestBodyApply } from '../interfaces/interfaces';
 interface ValidationError {
     field: string;
     message: string;
@@ -61,4 +61,20 @@ const validateJob = (job: Partial<requestBodyJob>): ValidationError[] => {
     return errors;
 };
 
-export { validateUser, validateLogin, validateEmployerSetting, validateJob };
+const APPLICATION_STATUS: ApplicationStatus[] = [ApplicationStatus.PENDING, ApplicationStatus.ACCEPTED, ApplicationStatus.REJECTED];
+const validateWorkerApplication = (application: Partial<requestBodyApply>): ValidationError[] => {
+    const errors: ValidationError[] = [];
+    if (application.status) errors.push({ field: 'status', message: 'Your can set the status' });
+
+    return errors;
+};
+
+const validateEmplopyerApplicationStatus = (application: Partial<requestBodyApply>): ValidationError[] => {
+    const errors: ValidationError[] = [];
+    if (!application.status) errors.push({ field: 'status', message: 'Status is required' });
+    else if (!APPLICATION_STATUS.includes(application.status)) errors.push({ field: 'status', message: 'Unknown Stutus' });
+
+    return errors;
+};
+
+export { validateUser, validateLogin, validateEmployerSetting, validateJob, validateWorkerApplication, validateEmplopyerApplicationStatus };

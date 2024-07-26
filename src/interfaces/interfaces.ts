@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { Role, EmpType, JobType, JobStatus } from '../config/prisma';
+import { Role, EmpType, JobType, JobStatus, ApplicationStatus } from '../config/prisma';
 
 export interface AuthenticatedRequest extends Request {
     user?: {
@@ -48,4 +48,13 @@ export interface requestBodyJob {
     jobType?: JobType;
     salary?: string;
     posterId: string;
+}
+
+export interface requestBodyApply {
+    jobId: string;
+    workerId: string;
+    status?: ApplicationStatus;
+    link?: string;
+    cv?: string;
+    motivation?: string;
 }
