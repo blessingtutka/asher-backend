@@ -68,7 +68,15 @@ async function login(req: Request, res: Response) {
             };
             return res.status(200).json(response);
         } else {
-            throw new Error('Bad Credential');
+            const responseError = {
+                status: 'error',
+                error: {
+                    code: 'Bad Request',
+                    message: 'Bad Credential',
+                },
+                status_code: 400,
+            };
+            return res.status(responseError.status_code).json(responseError);
         }
     } catch (error) {
         const responseError = {

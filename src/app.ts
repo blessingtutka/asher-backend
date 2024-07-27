@@ -16,8 +16,8 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/employer', employerRoutes);
 app.use('/api/worker', workerRoutes);
-app.use('api/job', jobRoutes);
-app.use('api/apply', applicationRoutes);
+app.use('/api/job', jobRoutes);
+app.use('/api/apply', applicationRoutes);
 
 //Not Found Routes
 app.use((req, res, next) => {
