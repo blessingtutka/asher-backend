@@ -9,6 +9,9 @@ const getEmployer = async (empId: string) => {
             where: {
                 id: empId,
             },
+            include: {
+                user: true,
+            },
         });
         return employer;
     } catch {
@@ -22,6 +25,9 @@ const getAuthEmployer = async (userId: string) => {
             where: {
                 userId: userId,
             },
+            include: {
+                user: true,
+            },
         });
         return employer;
     } catch {
@@ -34,6 +40,9 @@ const createUpdateEmployerProfile = async (userId: string, body: requestBodyEmpl
         const hasProfile = await employerTable.findUnique({
             where: {
                 userId: userId,
+            },
+            include: {
+                user: true,
             },
         });
 
