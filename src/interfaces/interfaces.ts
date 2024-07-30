@@ -42,9 +42,11 @@ export interface requestBodyWorker {
 
 export interface requestBodyJob {
     title: string;
+    image?: string;
     description?: string;
     localisation?: string;
     status?: JobStatus;
+    jobCategory?: string;
     jobType?: JobType;
     salary?: string;
     posterId: string;

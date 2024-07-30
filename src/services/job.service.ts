@@ -1,4 +1,5 @@
 import prisma from '../config/prisma';
+import { JobStatus } from '../config/prisma';
 import { requestBodyJob } from '../interfaces/interfaces';
 
 const jobTable = prisma.job;
@@ -17,7 +18,12 @@ const getJob = async (jobId: string) => {
 
 const getAllJobs = async () => {
     try {
-        const jobs = await jobTable.findMany();
+        const jobs = await jobTable.findMany({
+            where: {
+                status: JobStatus.OPEN,
+            },
+            include: { employer: true },
+        });
         return jobs;
     } catch {
         throw new Error('Error fetching jobs');
@@ -32,6 +38,7 @@ const getAuthEmployerJobs = async (userId: string) => {
                     userId: userId,
                 },
             },
+            include: { employer: true },
         });
         return jobs;
     } catch {

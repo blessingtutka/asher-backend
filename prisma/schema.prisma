@@ -90,9 +90,11 @@ model Job {
   id           String     @id @default(cuid())
   posterId     String
   title        String
+  image        String?
   description  String?
   localisation String?
   salary       String?
+  jobCategory  String?
   jobType      JobType?
   status       JobStatus @default(OPEN)
   employer     Employer @relation(fields: [posterId], references: [id])
