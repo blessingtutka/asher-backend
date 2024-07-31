@@ -92,7 +92,7 @@ model Job {
   title        String
   image        String?
   description  String?
-  localisation String?
+  location     String?
   salary       String?
   jobCategory  String?
   jobType      JobType?
