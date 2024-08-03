@@ -59,7 +59,7 @@ model Employer {
   userId      String  @unique
   profile     String?
   name        String?
-  description String?
+  description String? @db.Text
   type        EmpType?
   bio         String?
   activity    String?
@@ -91,7 +91,7 @@ model Job {
   posterId     String
   title        String
   image        String?
-  description  String?
+  description  String? @db.Text
   location     String?
   salary       String?
   jobCategory  String?
