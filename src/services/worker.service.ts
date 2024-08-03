@@ -22,6 +22,9 @@ const getAuthWorker = async (userId: string) => {
             where: {
                 userId: userId,
             },
+            include: {
+                user: true,
+            },
         });
         return worker;
     } catch {
@@ -34,6 +37,9 @@ const createUpdateWorkerProfile = async (userId: string, body: requestBodyWorker
         const hasProfile = await workerTable.findUnique({
             where: {
                 userId: userId,
+            },
+            include: {
+                user: true,
             },
         });
 
