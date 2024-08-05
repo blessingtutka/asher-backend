@@ -40,6 +40,12 @@ export interface requestBodyWorker {
     telephone?: string;
 }
 
+export interface requestBodyWorkerExperience {
+    title: string;
+    description?: string;
+    percentage: number;
+}
+
 export interface requestBodyJob {
     title: string;
     image?: string;

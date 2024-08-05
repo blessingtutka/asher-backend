@@ -1,5 +1,6 @@
 import prisma from '../config/prisma';
 import { requestBodyApply } from '../interfaces/interfaces';
+import { ApplicationStatus } from '../config/prisma';
 
 const applicationTable = prisma.application;
 
@@ -7,7 +8,7 @@ const getApplication = async (applicationId: string) => {
     try {
         const application = await applicationTable.findUnique({
             where: { id: applicationId },
-            include: { worker: true, job: true },
+            include: { worker: { include: { user: true } }, job: { include: { employer: true } } },
         });
         return application;
     } catch {
@@ -92,6 +93,18 @@ const deleteApplication = async (applicationId: string) => {
     }
 };
 
+const changeApplicationStatus = async (applicationId: string, status: ApplicationStatus) => {
+    try {
+        const application = await applicationTable.update({
+            where: { id: applicationId },
+            data: { status },
+        });
+        return application;
+    } catch (error) {
+        throw new Error('Error updating application status');
+    }
+};
+
 export {
     getApplication,
     getAllApplications,
@@ -100,4 +113,5 @@ export {
     deleteApplication,
     getAuthWorkerApplications,
     getAuthEmployerJobApplications,
+    changeApplicationStatus,
 };

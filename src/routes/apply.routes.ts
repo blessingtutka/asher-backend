@@ -8,6 +8,7 @@ import {
     deleteApplication,
     getAuthWorkerApplications,
     getAuthEmployerJobApplications,
+    changeApplicationStatus,
 } from '../controllers/apply.controller';
 import authorize from '../middlewares/authorize';
 import authenticate from '../middlewares/authenticate';
@@ -15,8 +16,9 @@ import authenticate from '../middlewares/authenticate';
 const applicationRoutes = Router();
 
 applicationRoutes.get('/', getAllApplications);
-applicationRoutes.get('/:id', getApplication);
 applicationRoutes.get('/worker', authenticate, authorize(Role.WORKER), getAuthWorkerApplications);
+applicationRoutes.get('/:id', getApplication);
+applicationRoutes.patch('/change/:id/status', authenticate, authorize(Role.EMPLOYER), changeApplicationStatus);
 applicationRoutes.get('/employer/:jobId', authenticate, authorize(Role.EMPLOYER), getAuthEmployerJobApplications);
 applicationRoutes.post('/create', authenticate, authorize(Role.WORKER), createApplication);
 applicationRoutes.put('/update/:id', authenticate, authorize(Role.WORKER), updateApplication);
