@@ -1,6 +1,29 @@
-import { getWorker, createUpdateWorkerProfile, getAuthWorker } from '../services/worker.service';
+import { getWorker, createUpdateWorkerProfile, getAuthWorker, listAllWorkers } from '../services/worker.service';
 import { Request, Response } from 'express';
 import { AuthenticatedRequest } from '../interfaces/interfaces';
+
+const getAllWorkers = async (req: Request, res: Response) => {
+    try {
+        const workers = await listAllWorkers();
+        const response = {
+            status: 'success',
+            message: 'All workers retrieved successfully',
+            data: workers,
+            status_code: 200,
+        };
+        return res.status(response.status_code).json(response);
+    } catch (error) {
+        const responseError = {
+            status: 'error',
+            error: {
+                code: 'Internal Server Error',
+                message: 'Error fetching workers',
+            },
+            status_code: 500,
+        };
+        return res.status(responseError.status_code).json(responseError);
+    }
+};
 
 const getWorkerProfile = async (req: Request, res: Response) => {
     try {
@@ -127,4 +150,4 @@ const setWorkerProfile = async (req: AuthenticatedRequest, res: Response) => {
     }
 };
 
-export { getWorkerProfile, setWorkerProfile, getYourWorkerProfile };
+export { getAllWorkers, getWorkerProfile, setWorkerProfile, getYourWorkerProfile };

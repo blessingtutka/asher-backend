@@ -3,6 +3,15 @@ import { requestBodyWorker } from '../interfaces/interfaces';
 
 const workerTable = prisma.worker;
 
+const listAllWorkers = async () => {
+    try {
+        const workers = await workerTable.findMany();
+        return workers;
+    } catch (error) {
+        throw new Error(`Error fetching all workers`);
+    }
+};
+
 const getWorker = async (workerId: string) => {
     try {
         const worker = await workerTable.findUnique({
@@ -74,4 +83,4 @@ const deleteWorkerProfile = async (userId: string) => {
     }
 };
 
-export { getWorker, getAuthWorker, createUpdateWorkerProfile, deleteWorkerProfile };
+export { listAllWorkers, getWorker, getAuthWorker, createUpdateWorkerProfile, deleteWorkerProfile };
