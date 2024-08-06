@@ -391,3 +391,10 @@ dist
 /.env
 /.env.*.local
 *._local.ts
+
+
+# Ignore all files in the uploads directory
+uploads/*
+
+# But do not ignore the .gitkeep file
+!uploads/.gitkeep

@@ -151,6 +151,13 @@ const createApplication = async (req: AuthenticatedRequest, res: Response) => {
         });
     }
 
+    if (req.files) {
+        Object.values(req.files).forEach((files) => {
+            const file = files[0];
+            req.body[file.fieldname] = file.filename;
+        });
+    }
+
     try {
         const worker = await getAuthWorker(user.userId);
         const data = { ...req.body, workerId: worker?.id };
@@ -186,6 +193,13 @@ const updateApplication = async (req: AuthenticatedRequest, res: Response) => {
                 message: "You don't have access",
             },
             status_code: 401,
+        });
+    }
+
+    if (req.files) {
+        Object.values(req.files).forEach((files) => {
+            const file = files[0];
+            if (file.filename != 'null') req.body[file.fieldname] = file.filename;
         });
     }
 
