@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-export const uploadFile = upload.single('file');
+export const uploadFile = (file: string) => upload.single(file);
 export const uploadFiles = upload.array('files', 10);
 export const uploadFields = (fields: { name: string }[]) => {
     return multer({ storage }).fields(fields);

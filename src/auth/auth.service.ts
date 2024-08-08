@@ -28,6 +28,10 @@ async function getSingleUser(userId: string) {
             where: {
                 id: userId,
             },
+            include: {
+                employers: true,
+                workers: true,
+            },
         });
 
         if (!user) {

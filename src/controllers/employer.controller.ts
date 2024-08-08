@@ -100,6 +100,14 @@ const setEmployerProfile = async (req: AuthenticatedRequest, res: Response) => {
 
     const errors = await validateEmployerSetting(req.body);
     if (errors.length > 0) return res.status(422).json({ errors });
+
+    if (req.file) {
+        const file = req.file;
+        if (file.filename != 'null') {
+            req.body[file.fieldname] = file.filename;
+        }
+    }
+
     try {
         const employer = await createUpdateEmployerProfile(user?.userId, req.body);
         if (employer) {
