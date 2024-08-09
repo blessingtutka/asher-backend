@@ -118,6 +118,14 @@ const setWorkerProfile = async (req: AuthenticatedRequest, res: Response) => {
             status_code: 401,
         });
     }
+
+    if (req.files) {
+        Object.values(req.files).forEach((files) => {
+            const file = files[0];
+            if (file.filename != 'null') req.body[file.fieldname] = file.filename;
+        });
+    }
+
     try {
         const worker = await createUpdateWorkerProfile(user?.userId, req.body);
         if (worker) {
