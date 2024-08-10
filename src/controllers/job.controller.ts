@@ -114,6 +114,11 @@ const createJob = async (req: AuthenticatedRequest, res: Response) => {
     const errors = await validateJob(req.body);
     if (errors.length > 0) return res.status(422).json({ errors });
 
+    if (req.file) {
+        const file = req.file;
+        if (file.filename != 'null') req.body[file.fieldname] = file.filename;
+    }
+
     try {
         const employer = await getAuthEmployer(user.userId);
         const data = { ...req.body, posterId: employer?.id };
@@ -155,6 +160,11 @@ const updateJob = async (req: AuthenticatedRequest, res: Response) => {
             },
             status_code: 401,
         });
+    }
+
+    if (req.file) {
+        const file = req.file;
+        if (file.filename != 'null') req.body[file.fieldname] = file.filename;
     }
 
     try {
