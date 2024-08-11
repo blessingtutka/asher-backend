@@ -253,4 +253,31 @@ const deleteJob = async (req: AuthenticatedRequest, res: Response) => {
     }
 };
 
-export { getJob, getAllJobs, getAuthEmployerJobs, createJob, updateJob, deleteJob };
+const searchJobs = async (req: Request, res: Response) => {
+    const { name, category } = req.query;
+
+    try {
+        const jobs = await jobService.searchJobs(name as string, category as string);
+
+        const response = {
+            status: 'success',
+            message: 'Jobs retrieved successfully',
+            data: jobs,
+            status_code: 200,
+        };
+
+        return res.status(response.status_code).json(response);
+    } catch (error) {
+        const responseError = {
+            status: 'error',
+            error: {
+                code: 'Internal Server Error',
+                message: 'Error searching jobs',
+            },
+            status_code: 500,
+        };
+        return res.status(responseError.status_code).json(responseError);
+    }
+};
+
+export { getJob, getAllJobs, getAuthEmployerJobs, createJob, updateJob, deleteJob, searchJobs };
