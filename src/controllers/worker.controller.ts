@@ -1,4 +1,4 @@
-import { getWorker, createUpdateWorkerProfile, getAuthWorker, listAllWorkers } from '../services/worker.service';
+import { getWorker, createUpdateWorkerProfile, getAuthWorker, listAllWorkers, searchWorkers } from '../services/worker.service';
 import { Request, Response } from 'express';
 import { AuthenticatedRequest } from '../interfaces/interfaces';
 
@@ -158,4 +158,31 @@ const setWorkerProfile = async (req: AuthenticatedRequest, res: Response) => {
     }
 };
 
-export { getAllWorkers, getWorkerProfile, setWorkerProfile, getYourWorkerProfile };
+const searchWorkerProfiles = async (req: Request, res: Response) => {
+    const { name, title } = req.query;
+
+    try {
+        const workers = await searchWorkers(name as string, title as string);
+
+        const response = {
+            status: 'success',
+            message: 'Workers retrieved successfully',
+            data: workers,
+            status_code: 200,
+        };
+
+        return res.status(response.status_code).json(response);
+    } catch (error) {
+        const responseError = {
+            status: 'error',
+            error: {
+                code: 'Internal Server Error',
+                message: 'Error searching workers',
+            },
+            status_code: 500,
+        };
+        return res.status(responseError.status_code).json(responseError);
+    }
+};
+
+export { getAllWorkers, getWorkerProfile, setWorkerProfile, getYourWorkerProfile, searchWorkerProfiles };

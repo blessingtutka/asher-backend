@@ -83,4 +83,38 @@ const deleteWorkerProfile = async (userId: string) => {
     }
 };
 
-export { listAllWorkers, getWorker, getAuthWorker, createUpdateWorkerProfile, deleteWorkerProfile };
+const searchWorkers = async (name?: string, title?: string) => {
+    const filters: any = {};
+
+    if (name) {
+        filters.OR = [
+            {
+                firstName: {
+                    contains: name,
+                    mode: 'insensitive',
+                },
+            },
+            {
+                lastName: {
+                    contains: name,
+                    mode: 'insensitive',
+                },
+            },
+        ];
+    }
+
+    if (title) {
+        filters.title = {
+            contains: title,
+            mode: 'insensitive',
+        };
+    }
+
+    const workers = await workerTable.findMany({
+        where: filters,
+    });
+
+    return workers;
+};
+
+export { listAllWorkers, getWorker, getAuthWorker, createUpdateWorkerProfile, deleteWorkerProfile, searchWorkers };
