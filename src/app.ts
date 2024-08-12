@@ -5,6 +5,7 @@ import employerRoutes from './routes/employer.routes';
 import workerRoutes from './routes/worker.routes';
 import jobRoutes from './routes/job.routes';
 import applicationRoutes from './routes/apply.routes';
+import experienceRoutes from './routes/experience.routes';
 import path from 'path';
 import bodyParser from 'body-parser';
 
@@ -23,6 +24,7 @@ app.use('/api/employer', employerRoutes);
 app.use('/api/worker', workerRoutes);
 app.use('/api/job', jobRoutes);
 app.use('/api/apply', applicationRoutes);
+app.use('/api/experience', experienceRoutes);
 
 //Not Found Routes
 app.use((req, res, next) => {
